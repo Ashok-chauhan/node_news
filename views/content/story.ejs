@@ -1,0 +1,63 @@
+<%- include('../partials/header'); %>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col">
+          <div class="">
+            <% if(story.media.length > 0){ %>
+            <div id="imgcontainer">
+              <% if(story.media.length >1){ %> <% story.media.forEach((img) => {
+              %>
+
+              <!-- Slideshow container -->
+
+              <div class="imgrow">
+                <div class="imgcolumn">
+                  <img
+                    src="<%= img.thumbnail %>"
+                    class="responsive"
+                    width="100%;"
+                    alt="<%= img.caption %>"
+                    onclick="myFunction(this);"
+                  />
+                </div>
+              </div>
+
+              <% } ) %> <% }else{ %>
+              <img
+                src="<%= story.media[0].thumbnail %>"
+                class="responsive"
+                alt="<%= story.media[0].caption %>"
+                width="100%;"
+              />
+              <% } %>
+            </div>
+            <% } %>
+            <!-- The expanding image container -->
+            <div class="container">
+              <!-- Close the image -->
+              <span
+                onclick="this.parentElement.style.display='none'"
+                class="closebtn"
+                >&times;</span
+              >
+
+              <!-- Expanded image -->
+              <img id="expandedImg" style="width: 100%" />
+
+              <!-- Image text -->
+              <div id="imgtext"></div>
+            </div>
+          </div>
+          <div><h1><%= story.title; %></h1></div>
+
+          <p><%- story.content; %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer');%>

@@ -1,0 +1,57 @@
+body{
+    /* background-color: rgb(162, 159, 164); */
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+
+
+
+  .jacquard-24-charted-regular {
+    font-family: "Jacquard 24 Charted", system-ui;
+    font-weight: 400;
+    font-size: 5em;
+    font-style: normal;
+    text-align: center;
+  }
+  .hrline{
+   border-top: 1px solid black;
+   border-bottom: 1px solid black;
+   padding: 1px;
+
+  }
+
+ .thumb{
+  max-width: 100%; 
+display: block; 
+height: auto;
+ }
+ .catheading{
+  color: brown;
+ }
+
+ /* unvisited link */
+a:link {
+ /* color: #db3545; */
+  text-decoration: none;
+}
+
+.navContainer{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+.navWidth{
+  width:150px;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #f2f2f2;
+  color: #000;
+}

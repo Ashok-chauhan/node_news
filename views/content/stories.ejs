@@ -1,0 +1,31 @@
+<%- include('../partials/header'); %>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <% stories.forEach((story) => { %>
+      <div class="row mb-1">
+        <div class="col-md-4">
+          <% if(story.media.length > 0){ %>
+          <img
+            src="<%= story.media[0].thumbnail %>"
+            class="thumb"
+            alt="<%= story.title %>"
+          />
+          <!-- <% story.media.forEach((img) => { %>
+         
+          <% } ) %>  -->
+
+          <% } %>
+        </div>
+        <div class="col-md-8">
+          <a href="/story/<%= story.id %>"> <%= story.title %></a>
+
+          <p><%= story.description %></p>
+        </div>
+      </div>
+      <% });%>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer');%>
