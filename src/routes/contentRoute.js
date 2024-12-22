@@ -69,9 +69,9 @@ const url = `${CAT}/${req.params.id}`;
 
   router.get('/sitemap',async(req,res)=>{
     categories = await util.getData(URL);
-   // console.log(JSON.stringify(categories));
-    res.setHeader('content-type', 'text/xml');
-    res.render('content/sitemap', {categories:categories});
+ res.send(JSON.stringify(categories));
+    // res.setHeader('content-type', 'text/xml');
+    // res.render('content/sitemap', {categories:categories});
    
   });
 router.get('/about',(req, res)=>{
