@@ -66,6 +66,14 @@ const url = `${CAT}/${req.params.id}`;
   res.render('content/story', {story:story[0], categories:categories, pageTitle:story[0].title});
   });
 
+
+  router.get('/sitemap',async(req,res)=>{
+    categories = await util.getData(URL);
+   // console.log(JSON.stringify(categories));
+    res.setHeader('content-type', 'text/xml');
+    res.render('content/sitemap', {categories:categories});
+   
+  });
 router.get('/about',(req, res)=>{
     res.send('about us page');
 });
