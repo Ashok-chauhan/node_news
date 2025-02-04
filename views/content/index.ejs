@@ -1,10 +1,10 @@
 <%- include('../partials/header'); %>
 <div class="container">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-9">
       <% if (contents.length > 0 ){ %>
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-7">
           <% if(contents[0].media.length > 0){%> <% if(contents[0].media[0].type
           ==='photo'){%>
           <img
@@ -12,98 +12,149 @@
             src="<%=contents[0].media[0].media %>"
             alt="<%=contents[0].title;%>"
           />
-          <%}else{%>
+          <%}else{ %>
           <video
-            class="thumb"
+            class="thumb rightcolvideo"
+            id="video-pan1-1"
             controls
             autoplay
             muted
             src="<%=contents[0].media[0].media %>"
+            type="application/x-mpegURL"
           ></video>
 
           <% } %> <% } %>
           <h5>
-            <a href="/story/<%= contents[0].id %>"><%=contents[0].title;%></a>
+            <a
+              href="/story/<%= contents[0].id %>?<%=contents[0].title.replace(/ /g,'-');%>"
+              ><%=contents[0].title;%></a
+            >
           </h5>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-5">
           <div class="row">
-            <% rightCol1.forEach((right1)=>{%>
-            <div class="col-md-3 mb-1">
+            <% rightCol1.forEach((right1, index)=>{%>
+            <div class="col-md-6 mb-1">
+              <% if(right1.media[0].type ==='photo'){%>
               <img class="thumb" src="<%=right1.media[0].media %>" />
+              <%}else{ %>
+              <video
+                class="thumb rightcolvideo"
+                id="video-panone-<%=index%>"
+                controls
+                autoplay
+                muted
+                src="<%=right1.media[0].media %>"
+              ></video>
+              <% } %>
             </div>
-            <div class="col-md-9">
-              <h5><a href="/story/<%= right1.id %>"><%=right1.title; %></a></h5>
+            <div class="col-md-6">
+              <a
+                href="/story/<%= right1.id %>?<%=right1.title.replace(/ /g,'-');%>"
+                ><%=right1.title; %></a
+              >
             </div>
 
             <% }); %>
+            <span
+              ><a href="/stories/<%=category_id%>">See full coverage</a></span
+            >
           </div>
         </div>
-        <!-- <div class="col-md-3 bg-success text-white">
-          more interesting way. Stylish white color tune combines with orange
-          color links and buttons, it gives your site a clean, professional look
-          and feel.including a large Showcase block that allows you to display a
-          rotating headline beautifully. Five content bottom regions can be
-          structured more interesting way. Stylish white color tune combines
-        </div> -->
       </div>
       <% }; %>
-
-      <div class="row">
-        <h1><a href="/stories/<%=pan1catid%>"><%=pan1title%></a></h1>
-
-        <% pan1.forEach((item)=>{%>
-        <div class="col-md-3">
-          <% if (item.media[0].type ==='photo'){ %>
-          <img class="thumb" src="<%= item.media[0].media%>" /><span>
-            <a href="/story/<%= item.id %>"><%= item.title%></a></span
-          >
-
-          <%}else{%>
-          <video
-            class="thumb"
-            controls
-            autoplay
-            muted
-            src="<%=item.media[0].media %>"
-          ></video>
-          <span><a href="/story/<%= item.id %>"><%= item.title%></a></span>
-
-          <% }%>
-        </div>
-        <%})%>
+    </div>
+    <div class="col-sm-3 vl">
+      <h5 class="line">MUST READ</h5>
+      <% if(business){%> <% business.forEach((bus)=>{%>
+      <div class="col-md-3" style="margin-top: 0px; width: 94%">
+        <a href="/story/<%= bus.id %>?<%=bus.title.replace(/ /g,'-');%>"
+          ><%=bus.title%></a
+        >
+        <hr />
       </div>
-
-      <div class="row">
-        <!-- <div class="">
-          <div class="row">
-            <div class="col-md-6 text-danger"><h1><%=pan2title%></h1></div>
-            <div class="col-md-6 text-end">See more stories</div>
-          </div>
-        </div> -->
-        <h1><a href="/stories/<%=pan2catid%>"><%=pan2title%></a></h1>
-        <% pan2.forEach((item)=>{%>
-        <div class="col-md-3">
-          <% if (item.media[0].type ==='photo'){ %>
-          <img class="thumb" src="<%= item.media[0].media%>" /><span
-            ><a href="/story/<%= item.id %>"><%= item.title%></a></span
-          >
-          <%}else{%>
-          <video
-            class="thumb"
-            controls
-            autoplay
-            muted
-            src="<%=item.media[0].media %>"
-          ></video>
-          <span><a href="/story/<%= item.id %>"><%= item.title%></a></span>
-
-          <% }%>
-        </div>
-        <%})%>
-      </div>
+      <%})%> <% }%>
     </div>
   </div>
+  <div class="row">
+    <h3><a href="/stories/<%=pan1catid%>"><%=pan1title%></a></h3>
+  </div>
+  <div class="row">
+    <% pan1.forEach((item, index)=>{%>
+    <div class="col-md-2">
+      <%if(item.media[0]){%> <% if (item.media[0].type ==='photo'){ %>
+      <img class="thumb" src="<%= item.media[0].media%>" /><span>
+        <a href="/story/<%= item.id %>?<%=item.title.replace(/ /g,'-');%>"
+          ><%= item.title%></a
+        ></span
+      >
+
+      <%}else{%>
+      <video
+        class="thumb rightcolvideo"
+        id="pan1-<%=index %>"
+        controls
+        autoplay
+        muted
+        src="<%=item.media[0].media %>"
+      ></video>
+      <span
+        ><a href="/story/<%= item.id %>?<%=item.title.replace(/ /g,'-');%>"
+          ><%= item.title%></a
+        ></span
+      >
+
+      <% }%> <%}else{%>
+      <span>
+        <a href="/story/<%= item.id %>?<%=item.title.replace(/ /g,'-');%>"
+          ><%= item.title%></a
+        ></span
+      >
+      <%}%>
+    </div>
+    <%})%>
+  </div>
+
+  <div class="row">
+    <h3><a href="/stories/<%=pan2catid%>"><%=pan2title%></a></h3>
+  </div>
+  <div class="row">
+    <% pan2.forEach((item, index)=>{%>
+    <div class="col-md-2">
+      <% if(item.media[0]){%> <% if (item.media[0].type ==='photo'){ %>
+      <img class="thumb" src="<%= item.media[0].media%>" /><span
+        ><a href="/story/<%= item.id %>?<%=item.title.replace(/ /g,'-');%>"
+          ><%= item.title%></a
+        ></span
+      >
+      <%}else{%>
+
+      <video
+        class="thumb rightcolvideo"
+        id="pan2-<%=index %>"
+        controls
+        autoplay
+        muted
+        src="<%=item.media[0].media %>"
+      ></video>
+      <span
+        ><a href="/story/<%= item.id %>?<%=item.title.replace(/ /g,'-');%>"
+          ><%= item.title%></a
+        ></span
+      >
+
+      <% }%> <% }else{ %>
+      <span
+        ><a href="/story/<%= item.id %>?<%=item.title.replace(/ /g,'-');%>"
+          ><%= item.title%></a
+        ></span
+      >
+      <%}%>
+    </div>
+    <%})%>
+  </div>
+  <!-- </div> -->
+  <!-- </div> -->
 </div>
 
 <%- include('../partials/footer');%>

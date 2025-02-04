@@ -8,26 +8,37 @@
           <div class="">
             <% if(story.media.length > 0){ %>
             <div id="imgcontainer">
-              <% if(story.media.length >1){ %> <% story.media.forEach((img) => {
-              %>
+              <% if(story.media.length >1){ %> <% story.media.forEach((img,
+              index) => { %>
 
               <!-- Slideshow container -->
 
               <div class="imgrow">
                 <div class="imgcolumn">
+                  <% if(img.type ==='photo') {%>
                   <img
-                    src="<%= img.thumbnail %>"
+                    src="<%= img.media %>"
                     class="responsive"
                     width="100%;"
                     alt="<%= img.caption %>"
                     onclick="myFunction(this);"
                   />
+                  <%}else{%>
+                  <video
+                    class="thumb rightcolvideo"
+                    id="story-<%=index %>"
+                    controls
+                    autoplay
+                    muted
+                    src="<%= img.media %>"
+                  ></video>
+                  <%}%>
                 </div>
               </div>
 
               <% } ) %> <% }else{ %>
               <img
-                src="<%= story.media[0].thumbnail %>"
+                src="<%= story.media[0].media %>"
                 class="responsive"
                 alt="<%= story.media[0].caption %>"
                 width="100%;"
