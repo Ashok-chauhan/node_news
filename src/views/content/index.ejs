@@ -53,7 +53,9 @@
 
             <% }); %>
             <span
-              ><a href="/stories/<%=category_id%>">See full coverage</a></span
+              ><a href="/stories/<%=category_id%>/<%=categories[0].name%>"
+                >See full coverage</a
+              ></span
             >
           </div>
         </div>
@@ -73,7 +75,7 @@
     </div>
   </div>
   <div class="row">
-    <h3><a href="/stories/<%=pan1catid%>"><%=pan1title%></a></h3>
+    <h3><a href="/stories/<%=pan1catid%>/<%=pan1title%>"><%=pan1title%></a></h3>
   </div>
   <div class="row">
     <% pan1.forEach((item, index)=>{%>
@@ -110,7 +112,7 @@
   </div>
 
   <div class="row">
-    <h3><a href="/stories/<%=pan2catid%>"><%=pan2title%></a></h3>
+    <h3><a href="/stories/<%=pan2catid%>/<%=pan2title%>"><%=pan2title%></a></h3>
   </div>
   <div class="row">
     <% pan2.forEach((item, index)=>{%>

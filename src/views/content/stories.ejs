@@ -1,41 +1,113 @@
 <%- include('../partials/header'); %>
 <div class="container">
   <div class="row">
-    <div class="col-md-12">
-      <% if(stories.length){%> <% stories.forEach((story) => { %>
-      <div class="row mb-1">
-        <div class="col-md-4">
-          <% if(story.media.length > 0){ %> <% if(story.media[0].type
-          ==='photo') {%>
-          <img
-            src="<%= story.media[0].media %>"
-            class="thumb"
-            alt="<%= story.title %>"
-          />
-          <%}else {%>
-          <video
-            class="thumb rightcolvideo"
-            id="stories-video"
-            controls
-            src="<%= story.media[0].media %>"
-          ></video>
-
-          <%} %> <% } %>
-        </div>
-        <div class="col-md-8">
-          <a href="/story/<%= story.id %>?<%=story.title.replace(/ /g,'-');%>">
-            <%= story.title %></a
-          >
-
-          <p><%= story.description %></p>
-        </div>
+    <div class="col-md-12 display-4 text-center p-2"><%=categoryname%></div>
+  </div>
+  <% if(topPan){ %>
+  <div class="row">
+    <div class="col-md-6">
+      <!-- first story -->
+    
+      
+      
+      <% if( firststory[0].media[0] && firststory[0].media[0].type ==='photo') {%>
+        <img
+          src="<%=firststory[0].media[0].media %>"
+          class="thumb"
+          width="100%;"
+          alt="<%= firststory[0].media[0].caption %>"
+        />
+        <%}else if( firststory[0].media[0] && firststory[0].media[0].type ==='video'){%>
+        <video
+          class="thumb rightcolvideo"
+          id="category-top<%=firststory[0].id %>"
+          controls
+          src="<%=firststory[0].media[0].media %>"
+        ></video>
+        <% } %>
+       <br/>
+       <h6><a href="/story/<%= firststory[0].id %>?<%=firststory[0].title.replace(/ /g,'-');%>"> <%=firststory[0].title %></a></h6>
       </div>
-      <% });%> <%}else {%>
+      
+      
+     
 
-      <div class="row mb-1"><h1>No story!, check again later.</h1></div>
-      <%}%>
+      <div class="col-md-6">
+        <% topPan.forEach((topstory,
+      index)=>{%>
+        <div class="row">
+          <div class="col-md-8">
+            <!-- title  -->
+          <h6> <a href="/story/<%= topstory.id %>?<%=topstory.title.replace(/ /g,'-');%>"> <%=topstory.title %></a></h6>
+          
+          </div>
+          <div class="col-md-4">
+            <!-- picture  -->
+            <%if(topstory.media[0] && topstory.media[0].type ==='photo'){%>
+
+            <img
+              src="<%=topstory.media[0].media %>"
+              class="thumb"
+              width="100%;"
+              alt="<%=topstory.media[0].caption %>"
+            />
+            
+            <%}else if(topstory.media[0] && topstory.media[0].type ==='video'){%>
+              <video
+                class="thumb rightcolvideo"
+                id="category-top<%=topstory.id %>"
+                controls
+                src="<%=topstory.media[0].media %>"
+              ></video>
+
+              <% } %>
+          </div>
+          <hr/>
+        </div>
+        <% }) %>
+      </div>
+      
+    </div>
+    <%}%>
+    <div class="row">
+      <div class="col-md-12">
+        <% if(stories.length){ %> <% stories.forEach((story) => { %>
+        <div class="row mb-1">
+          <div class="col-md-3">
+            <% if(story.media.length > 0){ %> <% if(story.media[0].type
+            ==='photo') {%>
+            <img
+              src="<%= story.media[0].media %>"
+              class="thumb"
+              alt="<%= story.title %>"
+            />
+            <%}else if(story.media[0].type
+            ==='video'){%>
+            <video
+              class="thumb rightcolvideo"
+              id="stories-video"
+              controls
+              src="<%= story.media[0].media %>"
+            ></video>
+
+            <%} %> <% } %>
+          </div>
+          <div class="col-md-9">
+          <h6><a href="/story/<%= story.id %>?<%=story.title.replace(/ /g,'-');%>"><%= story.title %></a></h6>
+            <% if(story.description.length > 50){%>
+            <p class="fw-light"><%= story.description %></p>
+            <%}else{%>
+              <p class="fw-light"><%= story.content.substring(0, 400).replace(/<[^>]*>/g, '') %>...</p>
+            <%} %>
+          </div>
+        </div>
+        <% });%> <%}else {%>
+
+        <div class="row mb-1"><h1>No story!, check again later.</h1></div>
+        <%}%>
+      </div>
     </div>
   </div>
-</div>
 
-<%- include('../partials/footer');%>
+  <%- include('../partials/footer');%>
+</div>

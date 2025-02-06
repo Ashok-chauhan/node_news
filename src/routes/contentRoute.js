@@ -66,18 +66,28 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/stories/:id", async (req, res) => {
+router.get("/stories/:id/:categoryname", async (req, res) => {
   try {
+    const topPan = await StoryCollection.find({ category_id: req.params.id })
+      .sort({ pub_date: -1 })
+      .limit(5);
     const content = await StoryCollection.find({
       category_id: req.params.id,
-    }).sort({ pub_date: -1 });
+    })
+      .sort({ pub_date: -1 })
+      .skip(5)
+      .limit(50);
 
     const pageTitle = content.length ? content[0].title : "pinga.us";
-
+    // const firststory = topPan.slice(0, 1);
+    const firststory = topPan.splice(0, 1);
     res.render("content/stories", {
       stories: content,
       categories: categories,
       pageTitle: pageTitle,
+      topPan: topPan,
+      firststory: firststory,
+      categoryname: req.params.categoryname,
     });
   } catch {
     res.send("Something went wrong!, try again later");

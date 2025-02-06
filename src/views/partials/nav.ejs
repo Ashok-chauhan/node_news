@@ -26,7 +26,10 @@
     <div class="navbar-nav h6 navContainer">
       <% categories.forEach((category) => { %>
       <div class="navWidth">
-        <a class="nav-link" href="/stories/<%= category.category_id %>">
+        <a
+          class="nav-link"
+          href="/stories/<%= category.category_id %>/<%= category.name %>"
+        >
           <%= category.name %>
         </a>
       </div>
