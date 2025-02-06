@@ -1,3 +1,4 @@
+const path = require("path");
 const express = require("express");
 const app = express();
 const port = 3002;
@@ -12,7 +13,7 @@ mongoose
 
 // set the view engine to ejs
 app.set("view engine", "ejs");
-
+app.set("views", path.join(__dirname, "views"));
 const contentRoute = require("./routes/contentRoute");
 const fetchData = require("./routes/contents");
 app.use(express.static(__dirname + "/public"));
