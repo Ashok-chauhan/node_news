@@ -1,9 +1,10 @@
 const redis = require("redis");
 require("dotenv").config();
 const client = redis.createClient({
-  url: process.env.REDIS_URL,
-  password: process.env.REDIS_PASSWORD,
-  //port: process.env.PORT,
+  // url: process.env.REDIS_URL,
+  // password: process.env.REDIS_PASSWORD,
+  url: "redis://default:aJbA7oDf43UHDIxJYGjLPFO4ZYn2fSyr@redis-19099.c256.us-east-1-2.ec2.redns.redis-cloud.com:19099",
+  password: "Redis@975",
 });
 
 client.on("error", (err) => console.error("Redis Client Error", err));
