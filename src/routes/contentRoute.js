@@ -2,6 +2,11 @@ const express = require("express");
 const router = express.Router();
 const CategoryCollection = require("../models/category");
 const StoryCollection = require("../models/story");
+const client = require("../redisClient");
+// const {
+//   cacheMiddleware,
+//   categoryMiddleware,
+// } = require("../middleware/cacheMiddleware");
 // var URL = 'https://prodman.whizti.com/api/publication/580?limit=0';
 var URL = "https://dispatch.whizti.com/api/publication/861?limit=0";
 
@@ -10,73 +15,164 @@ var _stories = [];
 //const PUBID = 360; inforum -580
 
 const util = require("../utility");
+
+// Middleware to check cache
+const cacheMiddleware = async (req, res, next) => {
+  const cachedData = await client.get("content");
+  if (cachedData) {
+    // return res.json({ content: JSON.parse(cachedData) });
+    return JSON.parse(cachedData);
+  }
+  next();
+};
+// Middleware to check cache
+const categoryMiddleware = async (req, res, next) => {
+  const cachedData = await client.get("categories");
+  if (cachedData) {
+    //return res.json({ categories: JSON.parse(cachedData) });
+    return JSON.parse(cachedData);
+  }
+  next();
+};
+
 //home route.
 router.get("/", async (req, res) => {
-  try {
+  // try {
+  const cachedCategory = await client.get("categories");
+  if (cachedCategory) {
+    categories = JSON.parse(cachedCategory);
+    console.log("Cached Category");
+  } else {
     categories = await CategoryCollection.find();
-    const category_id = categories[0].category_id;
-    const content = await StoryCollection.find({
+    await client.setEx("categories", 28800, JSON.stringify(categories));
+  }
+
+  const category_id = categories[0].category_id;
+  const cachedContent = await client.get("content");
+  let content;
+  if (cachedContent) {
+    content = JSON.parse(cachedContent);
+    console.log("Cached Contents...");
+  } else {
+    content = await StoryCollection.find({
       category_id: category_id,
     }).sort({ pub_date: -1 });
+    await client.setEx("content", 28800, JSON.stringify(content));
+  }
 
-    const rightCol1 = content.slice(1, 5);
-    const firststory = content.slice(0, 1);
-    //pan1
+  const rightCol1 = content.slice(1, 5);
+  const firststory = content.slice(0, 1);
+  //pan1
 
-    const pan1title = categories[1].name;
-    const pan1catid = categories[1].category_id;
-    const pan1content = await StoryCollection.find({
+  const pan1title = categories[1].name;
+  const pan1catid = categories[1].category_id;
+  const cachedPan1Content = await client.get(`"${categories[1].category_id}"`);
+  let pan1content;
+
+  if (cachedPan1Content) {
+    pan1content = JSON.parse(cachedPan1Content);
+    console.log("Cached pan1 content...");
+  } else {
+    pan1content = await StoryCollection.find({
       category_id: categories[1].category_id,
     }).sort({ pub_date: -1 });
-    const pan1 = pan1content.slice(0, 6);
 
-    //pan2
+    await client.setEx(
+      `"${categories[1].category_id}"`,
+      28800,
+      JSON.stringify(pan1content)
+    );
+  }
 
-    const pan2catid = categories[2].category_id;
-    const pan2title = categories[2].name;
-    const pan2content = await StoryCollection.find({
+  const pan1 = pan1content.slice(0, 6);
+
+  //pan2
+
+  const pan2catid = categories[2].category_id;
+  const pan2title = categories[2].name;
+
+  const cachedPan2Content = await client.get(`"${categories[2].category_id}"`);
+  let pan2content;
+  if (cachedPan2Content) {
+    pan2content = JSON.parse(cachedPan2Content);
+    console.log("Cached pand2 content");
+  } else {
+    pan2content = await StoryCollection.find({
       category_id: categories[2].category_id,
     }).sort({ pub_date: -1 });
-    const pan2 = pan2content.slice(0, 6);
-    const pageTitle = pan1title + " | " + pan2title;
 
-    // 3rd right col
-    const business = await StoryCollection.find({ category_id: 5083 })
+    await client.setEx(
+      `"${categories[2].category_id}"`,
+      28800,
+      JSON.stringify(pan2content)
+    );
+  }
+
+  const pan2 = pan2content.slice(0, 6);
+  const pageTitle = pan1title + " | " + pan2title;
+
+  // 3rd right col
+  const cachedBusiness = await client.get("5083");
+  let business;
+  if (cachedBusiness) {
+    business = JSON.parse(cachedBusiness);
+    console.log("Cached Business...");
+  } else {
+    business = await StoryCollection.find({ category_id: 5083 })
       .sort({ pub_date: -1 })
       .limit(5);
-    _stories = [...pan1, ...pan2, ...rightCol1, ...firststory, ...business];
 
-    res.render("content/index", {
-      categories: categories,
-      contents: content,
-      rightCol1: rightCol1,
-      pan1: pan1,
-      pan1title: pan1title,
-      pan2: pan2,
-      pan2title: pan2title,
-      pan1catid: pan1catid,
-      pan2catid: pan2catid,
-      pageTitle: pageTitle,
-      business: business,
-      category_id: category_id,
-      // opinions: opinions,
-    });
-  } catch {
-    res.send("Something went wrong!, try again later");
+    await client.setEx("5083", 28800, JSON.stringify(business));
   }
+
+  _stories = [...pan1, ...pan2, ...rightCol1, ...firststory, ...business];
+
+  res.render("content/index", {
+    categories: categories,
+    contents: content,
+    rightCol1: rightCol1,
+    pan1: pan1,
+    pan1title: pan1title,
+    pan2: pan2,
+    pan2title: pan2title,
+    pan1catid: pan1catid,
+    pan2catid: pan2catid,
+    pageTitle: pageTitle,
+    business: business,
+    category_id: category_id,
+    // opinions: opinions,
+  });
+  // } catch {
+  //   res.send("Something went wrong!, try again later");
+  // }
 });
 
 router.get("/stories/:id/:categoryname", async (req, res) => {
   try {
-    const topPan = await StoryCollection.find({ category_id: req.params.id })
-      .sort({ pub_date: -1 })
-      .limit(5);
-    const content = await StoryCollection.find({
-      category_id: req.params.id,
-    })
-      .sort({ pub_date: -1 })
-      .skip(5)
-      .limit(50);
+    const cachedToppan = await client.get(`"${req.params.id}"`);
+    let topPan;
+    if (cachedToppan) {
+      topPan = JSON.parse(cachedToppan);
+    } else {
+      topPan = await StoryCollection.find({ category_id: req.params.id })
+        .sort({ pub_date: -1 })
+        .limit(5);
+      await client.setEx(`"${req.params.id}"`, 28800, JSON.stringify(topPan));
+    }
+    const cachedContent = await client.get(`"${req.params.id}"`);
+    let content;
+    if (cachedContent) {
+      content = JSON.parse(cachedContent);
+      console.log("Cacheed Category content", req.params.id);
+    } else {
+      content = await StoryCollection.find({
+        category_id: req.params.id,
+      })
+        .sort({ pub_date: -1 })
+        .skip(5)
+        .limit(50);
+      await client.setEx(`"${req.params.id}"`, 28800, JSON.stringify(content));
+    }
 
     const pageTitle = content.length ? content[0].title : "pinga.us";
     // const firststory = topPan.slice(0, 1);
@@ -97,7 +193,15 @@ router.get("/stories/:id/:categoryname", async (req, res) => {
 router.get("/story/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const story = await StoryCollection.findById(id);
+    let story;
+    const cachedStory = await client.get(`"${id}"`);
+    if (cachedStory) {
+      story = JSON.parse(cachedStory);
+      console.log("Cahsed Story...");
+    } else {
+      story = await StoryCollection.findById(id);
+      await client.setEx(`"${id}"`, 28800, JSON.stringify(story));
+    }
 
     res.render("content/story", {
       story: story,

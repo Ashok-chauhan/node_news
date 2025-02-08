@@ -6,6 +6,7 @@ const Story = require("../models/story");
 var URL = "https://dispatch.whizti.com/api/publication/861?limit=0";
 
 var CAT = "https://dispatch.whizti.com/api/category";
+const client = require("../redisClient");
 var categories;
 var _stories = [];
 //const PUBID = 360; inforum -580
@@ -13,6 +14,11 @@ const util = require("../utility");
 
 router.get("/", (req, res) => {
   res.send("contents...");
+});
+
+router.get("/clear-cache", async (req, res) => {
+  await client.flushdb(); // or flushall()
+  res.send("Cache cleared!");
 });
 
 router.get("/addcategory", async (req, res) => {
