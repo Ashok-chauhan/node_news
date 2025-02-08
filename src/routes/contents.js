@@ -17,7 +17,7 @@ router.get("/", (req, res) => {
 });
 
 router.get("/clear-cache", async (req, res) => {
-  await client.flushdb(); // or flushall()
+  await client.sendCommand(["FLUSHDB"]);
   res.send("Cache cleared!");
 });
 
