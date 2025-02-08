@@ -6,7 +6,9 @@ const client = require("./redisClient");
 const mongoose = require("mongoose");
 
 mongoose
-  .connect(process.env.MONGODB_URI)
+  .connect(
+    "mongodb+srv://node_cms:nodeprojectcms999@nodecluster9.y9rvn.mongodb.net/cms"
+  )
   .then(() => console.log("Mongoose Connected"))
   .catch((err) => console.log("Monog Error", err));
 
