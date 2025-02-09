@@ -87,6 +87,14 @@ footer {
   font-weight: bold;
   padding: 5px;
 }
+
+.head-line{
+  border-left: 5px solid rgba(241, 131, 5, 0.916);
+  height: auto;
+  color: #290000;
+  font-weight: bold;
+  padding: 5px;
+}
 .pan{
   width: 259px;
 }

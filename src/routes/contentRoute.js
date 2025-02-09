@@ -131,6 +131,42 @@ router.get("/", async (req, res) => {
 
     _stories = [...pan1, ...pan2, ...rightCol1, ...firststory, ...business];
 
+    // Sports category bof
+
+    const cachedToppan = await client.get("sportsCategory");
+    let topPan;
+    if (cachedToppan) {
+      topPan = JSON.parse(cachedToppan);
+    } else {
+      topPan = await StoryCollection.find({ category_id: 5095 })
+        .sort({ pub_date: -1 })
+        .limit(5);
+      await client.setEx("sportsCategory", 28800, JSON.stringify(topPan));
+    }
+    const cachedSportsContent = await client.get("sportsContentData");
+    let sportsContent;
+
+    if (cachedSportsContent) {
+      sportsContent = JSON.parse(cachedSportsContent);
+    } else {
+      sportsContent = await StoryCollection.find({
+        category_id: 5095,
+      })
+        .sort({ pub_date: -1 })
+        .skip(5)
+        .limit(10);
+
+      await client.setEx(
+        "sportsContentData",
+        28800,
+        JSON.stringify(sportsContent)
+      );
+    }
+
+    const firsSportststory = topPan.splice(0, 1);
+
+    // Sports category eof
+
     res.render("content/index", {
       categories: categories,
       contents: content,
@@ -144,6 +180,9 @@ router.get("/", async (req, res) => {
       pageTitle: pageTitle,
       business: business,
       category_id: category_id,
+      topPan: topPan,
+      stories: sportsContent,
+      firststory: firsSportststory,
       // opinions: opinions,
     });
   } catch {
