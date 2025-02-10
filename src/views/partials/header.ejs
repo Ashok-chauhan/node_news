@@ -36,6 +36,12 @@
       name="description"
       content=" news | pinga.us, media, sports, weather."
     />
+    <% } %> <% if(typeof ogmeta != "undefined"){ %>
+    <meta property="og:title" content="<%=ogmeta.title%>" />
+    <meta property="og:description" content="<%=ogmeta.description %>..." />
+    <meta property="og:image" content="<%=ogmeta.image%>" />
+    <meta property="og:url" content="<%=ogmeta.url%>" />
+    <meta property="og:type" content="article" />
     <% } %>
 
     <link rel="canonical" href="https://news.pinga.us/" />
@@ -73,6 +79,10 @@
         "url": "https://news.pinga.us/your-page"
       }
     </script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
   </head>
   <body class="container">
     <div class="row">

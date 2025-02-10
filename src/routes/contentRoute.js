@@ -16,25 +16,6 @@ var _stories = [];
 
 const util = require("../utility");
 
-// Middleware to check cache
-const cacheMiddleware = async (req, res, next) => {
-  const cachedData = await client.get("content");
-  if (cachedData) {
-    // return res.json({ content: JSON.parse(cachedData) });
-    return JSON.parse(cachedData);
-  }
-  next();
-};
-// Middleware to check cache
-const categoryMiddleware = async (req, res, next) => {
-  const cachedData = await client.get("categories");
-  if (cachedData) {
-    //return res.json({ categories: JSON.parse(cachedData) });
-    return JSON.parse(cachedData);
-  }
-  next();
-};
-
 //home route.
 router.get("/", async (req, res) => {
   try {
@@ -62,6 +43,7 @@ router.get("/", async (req, res) => {
 
     const rightCol1 = content.slice(1, 5);
     const firststory = content.slice(0, 1);
+
     //pan1
 
     const pan1title = categories[1].name;
@@ -166,6 +148,14 @@ router.get("/", async (req, res) => {
     const firsSportststory = topPan.splice(0, 1);
 
     // Sports category eof
+    const ogmeta = {
+      title: firststory[0].title,
+      description: firststory[0].content
+        .substring(0, 200)
+        .replace(/<[^>]*>/g, ""),
+      image: firststory[0].media[0] ? firststory[0].media[0].media : "",
+      url: `/story/${firststory[0]._id}?${firststory[0].title}`,
+    };
 
     res.render("content/index", {
       categories: categories,
@@ -183,6 +173,7 @@ router.get("/", async (req, res) => {
       topPan: topPan,
       stories: sportsContent,
       firststory: firsSportststory,
+      ogmeta: ogmeta,
       // opinions: opinions,
     });
   } catch {
@@ -226,6 +217,14 @@ router.get("/stories/:id/:categoryname", async (req, res) => {
 
     const pageTitle = content.length ? content[0].title : "pinga.us";
     const firststory = topPan.splice(0, 1);
+    const ogmeta = {
+      title: firststory[0].title,
+      description: firststory[0].content
+        .substring(0, 200)
+        .replace(/<[^>]*>/g, ""),
+      image: firststory[0].media[0] ? firststory[0].media[0].media : "",
+      url: `/story/${firststory[0]._id}?${firststory[0].title}`,
+    };
 
     res.render("content/stories", {
       stories: content,
@@ -234,6 +233,7 @@ router.get("/stories/:id/:categoryname", async (req, res) => {
       topPan: topPan,
       firststory: firststory,
       categoryname: req.params.categoryname,
+      ogmeta: ogmeta,
     });
   } catch {
     res.send("Something went wrong!, try again later");
@@ -252,11 +252,17 @@ router.get("/story/:id", async (req, res) => {
       story = await StoryCollection.findById(id);
       await client.setEx(`"${id}"`, 28800, JSON.stringify(story));
     }
-
+    const ogmeta = {
+      title: story.title,
+      description: story.content.substring(0, 200).replace(/<[^>]*>/g, ""),
+      image: story.media[0] ? story.media[0].media : "",
+      url: `/story/${story._id}?${story.title}`,
+    };
     res.render("content/story", {
       story: story,
       categories: categories,
       pageTitle: story.title,
+      ogmeta: ogmeta,
     });
   } catch {
     res.send("Something went wrong!, try again later");
