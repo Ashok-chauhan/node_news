@@ -258,6 +258,7 @@ router.get("/story/:id", async (req, res) => {
       image: story.media[0] ? story.media[0].media : "",
       url: `/story/${story._id}?${story.title}`,
     };
+
     res.render("content/story", {
       story: story,
       categories: categories,
