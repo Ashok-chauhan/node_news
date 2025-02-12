@@ -9,7 +9,6 @@ var CAT = "https://dispatch.whizti.com/api/category";
 const client = require("../redisClient");
 var categories;
 var _stories = [];
-//const PUBID = 360; inforum -580
 const util = require("../utility");
 
 router.get("/", (req, res) => {
