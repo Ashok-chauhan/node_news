@@ -19,6 +19,14 @@ const contentRoute = require("./routes/contentRoute");
 const fetchData = require("./routes/contents");
 app.use(express.static(__dirname + "/public"));
 
+// Redirect all requests from news.pinga.us to pinga.us
+app.use((req, res, next) => {
+  if (req.hostname === "news.pinga.us") {
+    return res.redirect(301, "https://pinga.us" + req.originalUrl);
+  }
+  next();
+});
+
 app.get("/home", (req, rest) => {
   rest.render("index");
 });
