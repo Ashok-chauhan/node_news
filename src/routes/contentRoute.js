@@ -247,6 +247,7 @@ router.get("/story/:id", async (req, res) => {
     const cachedStory = await client.get(`"${id}"`);
     if (cachedStory) {
       story = JSON.parse(cachedStory);
+
       console.log("Cahsed Story...");
     } else {
       story = await StoryCollection.findById(id);
@@ -265,8 +266,8 @@ router.get("/story/:id", async (req, res) => {
       pageTitle: story.title,
       ogmeta: ogmeta,
     });
-  } catch {
-    res.send("Something went wrong!, try again later");
+  } catch (err) {
+    res.send("Something went wrong!, try again later" + err.message);
   }
 });
 
