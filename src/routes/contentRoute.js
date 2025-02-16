@@ -279,7 +279,6 @@ router.get("/sitemap", async (req, res) => {
 
 router.get("/contactus", (req, res) => {
   res.render("content/contactus", {
-    categories: categories,
     pageTitle: "Contact Us",
   });
 });
