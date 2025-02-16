@@ -276,6 +276,13 @@ router.get("/sitemap", async (req, res) => {
   res.setHeader("content-type", "text/xml");
   res.render("content/sitemap", { categories: categories });
 });
+
+router.get("/contactus", (req, res) => {
+  res.render("content/contactus", {
+    categories: categories,
+    pageTitle: "Contact Us",
+  });
+});
 router.get("/about", (req, res) => {
   res.send("about us page");
 });
