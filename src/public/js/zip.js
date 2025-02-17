@@ -78,8 +78,8 @@ navigator.geolocation.getCurrentPosition(
 
 //apiinfo.io
 //token: e2131bd04aca82
-function getZipfromIP() {
-  fetch("https://ipinfo.io/json?token=e2131bd04aca82")
-    .then((response) => response.json())
-    .then((data) => console.log("ZIP Code:", data.postal));
-}
+// function getZipfromIP() {
+//   fetch("https://ipinfo.io/json?token=e2131bd04aca82")
+//     .then((response) => response.json())
+//     .then((data) => console.log("ZIP Code:", data.postal));
+// }
