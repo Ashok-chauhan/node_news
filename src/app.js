@@ -1,14 +1,17 @@
 const path = require("path");
 const express = require("express");
 const app = express();
+require("dotenv").config();
 const port = 3002;
 const client = require("./redisClient");
 const mongoose = require("mongoose");
 
+// mongoose
+//   .connect("mongodb://admin:secret@localhost:27017/cms?authSource=admin")
+//   .then(() => console.log("Mongoose Connected"))
+//   .catch((err) => console.log("Monog Error", err));
 mongoose
-  .connect(
-    "mongodb+srv://node_cms:nodeprojectcms999@nodecluster9.y9rvn.mongodb.net/cms"
-  )
+  .connect(process.env.MONGODB_URI)
   .then(() => console.log("Mongoose Connected"))
   .catch((err) => console.log("Monog Error", err));
 
