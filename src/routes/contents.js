@@ -67,7 +67,10 @@ router.get("/addcontent", async (req, res) => {
             description: item.description,
             icon_uri: item.icon_uri,
             type: item.type,
-            content: item.content,
+            // content: item.content,
+            content: item.content
+              .replace(/Copyright\s+\d{4}[\s\S]*$/i, "")
+              .trim(),
             pub_date: item.pub_date,
             media: story_media ? story_media : "",
           });
