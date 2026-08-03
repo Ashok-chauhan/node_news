@@ -15,6 +15,8 @@ mongoose
   .then(() => console.log("Mongoose Connected"))
   .catch((err) => console.log("Monog Error", err));
 
+// Setting cron job
+require("./cron/contentRefresh");
 // set the view engine to ejs
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
