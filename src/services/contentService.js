@@ -4,6 +4,7 @@ const client = require("../redisClient");
 var categories;
 
 const util = require("../utility");
+var CAT = "https://dispatch.whizti.com/api/category";
 
 async function refreshContent() {
   try {
