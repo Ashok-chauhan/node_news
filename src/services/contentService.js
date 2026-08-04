@@ -66,12 +66,31 @@ async function refreshCategoryCache() {
 
   for (const category of categories) {
     //pinga.us/stories/5084/Health
-
-    await fetch(
-      `https://pinga.us/stories/${category.category_id}/${category.name}`,
+    let topPan = await Story.find({ category_id: category.category_id })
+      .sort({ pub_date: -1 })
+      .limit(5);
+    await client.setEx(
+      `"topPan${category.category_id}"`,
+      28800,
+      JSON.stringify(topPan),
     );
 
-    console.log(`Category ${category.category_id} refreshed`);
+    let content = await Story.find({
+      category_id: category.category_id,
+    })
+      .sort({ pub_date: -1 })
+      .skip(5)
+      .limit(50);
+
+    await client.setEx(
+      `"${category.category_id}"`,
+      28800,
+      JSON.stringify(content),
+    );
+
+    console.log(
+      `Category ${category.category_id} - ${category.name} refreshed`,
+    );
   }
 }
 
