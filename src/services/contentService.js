@@ -21,7 +21,7 @@ async function refreshContent() {
   }
 }
 
-async function fetchLatestContent(req, res) {
+async function fetchLatestContent() {
   categories = await Category.find();
   categories.forEach(async (element) => {
     let stories = await util.getCategory(CAT + "/" + element.category_id);
@@ -59,7 +59,6 @@ async function fetchLatestContent(req, res) {
       });
     }
   });
-  res.json("done!");
 }
 
 async function refreshCategoryCache() {
